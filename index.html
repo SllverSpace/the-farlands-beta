@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>The Farlands</title>
+	<link rel="shortcut icon" type="image/jpg" href="assets/icon.png" />
+	<link rel="manifest" href="manifest.json">
+	<meta property="og:title" content="Silver"/>
+	<meta property="og:url" content="https://the-farlands.silverspace.online"/>
+	<meta property="og:image" content="https://the-farlands.silverspace.online/assets/favicon.png"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
+	<script type="application/ld+json">
+		{
+			"@context" : "https://schema.org",
+			"@type" : "WebSite",
+			"name" : "The Farlands",
+			"alternateName" : ["TheFarlands", "The-Farlands"],
+			"url" : "https://the-farlands.silverspace.online/"
+		}
+	</script>
+	<script type="application/ld+json">
+		{
+		  "@context": "http://schema.org",
+		  "@type": "CreativeWork",
+		  "name": "The Farlands",
+		  "description": "The Farlands is a game like Minecraft and somewhat like Bloxd.io. It's about exploring a world
+		  and crafting materials and blocks so that you can build houses and bases. The Farlands is a web game and it
+		  is a video game, it is a multiplayer game that you can play by building and breaking the world.",
+		  "image": "https://the-farlands.silverspace.online/assets/icon.png"
+		}
+	</script>
+</head>
+
+<body>
+	<h1>The Farlands - Made by Silver</h1>
+	<p>The Farlands is a game like Minecraft and somewhat like Bloxd.io. It's about exploring a world
+	and crafting materials and blocks so that you can build houses and bases. The Farlands is a web game and it
+	is a video game, it is a multiplayer game that you can play by building and breaking the world.</p>
+	<img src="assets/icon.png" alt="">
+	<p>The Farlands is a game made by Silver. Silver is also known like silver, silverspace silverspace505,
+	silver505, Silver, SilverSpace, SilverSpace505, SilverSpace707, Silver505, and silverspace707.</p>
+
+	<div id="cover" style="position: absolute;top: 0px;left: 0px;width: 5000px;height: 5000px;background-color: #161616;"></div>
+
+	<canvas id="gpucanvas"></canvas>
+	<canvas id="canvas"></canvas>
+
+	<script src="https://basic.silverspace.online/ui.js"></script>
+	<script src="https://basic.silverspace.online/input.js"></script>
+	<script src="https://basic.silverspace.online/utils.js"></script>
+
+	<script src="simplex-noise.js"></script>
+
+	<textarea id="getInput"></textarea>
+
+	<script src="data.js"></script>
+
+	<!-- <script src="webgl.js"></script> -->
+	
+	<script src="webgpu.js"></script>
+
+	<script src="setup.js"></script>
+	<script src="utils.js"></script>
+	<!-- <script src="input.js"></script> -->
+	<script src="network.js"></script>
+
+	<!-- sprites -->
+	<script src="sprites/basic.js"></script>
+	<script src="sprites/first.js"></script>
+	<script src="sprites/second.js"></script>
+	<script src="sprites/player.js"></script>
+
+	<!-- <script src="sprites/ui.js"></script> -->
+	
+	<script src="ui.js"></script>
+
+	<script src="menu/disconnected.js"></script>
+	<script src="menu/options.js"></script>
+	<script src="menu/howtoplay.js"></script>
+
+	<script src="game.js"></script>
+	<script src="chunkManager.js"></script>
+	<script src="menu/main.js"></script>
+
+	<script src="script.js"></script>
+</body>
+
+</html>

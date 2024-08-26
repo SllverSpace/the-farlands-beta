@@ -1,0 +1,14 @@
+worlds can be put onto the server
+
+their sets will be limited to a number
+
+players will have to delete old sets and admins can get rid of protectectors if they are becoming issues
+
+if a new lobby is created and the server is full, then they will have to wait 3-24 hours for a request to the least active server
+owner to download their world, then it will be closed and the slot will be reserved for the next 24 hours for the player to create
+their world on the server or upload one.
+
+the least popular world will be calculated by player per hour median. So if you're world is not doing well, you'll have to download
+it and then improve it to keep it on the server.
+
+of course i will be able to reserve a slot for me or friends to host a lobby on the server bc we want to always be able to play.
