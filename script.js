@@ -57,20 +57,23 @@ const projection = mat4.create()
 
 // sprites
 var rp = { x: 0, y: 0, z: 0 }
-var indicator = new Box(0, 0, 0, 1.025, 1.025, 1.025, [1, 1, 1])
+var indicator = new webgpu.Box(0, 0, 0, 1.025, 1.025, 1.025, [1, 1, 1, 0.2])
 for (let i = 0; i < 6; i++) {
-	indicator.box.uvs.push(
+	indicator.uvs.push(
 		3 * blockSize.x, 2 * blockSize.y,
 		3 * blockSize.x + blockSize.x, 2 * blockSize.y + blockSize.y,
 		3 * blockSize.x + blockSize.x, 2 * blockSize.y,
 		3 * blockSize.x, 2 * blockSize.y + blockSize.y,
 	)
 }
-indicator.box.updateBuffers()
-indicator.box.useTexture = true
-indicator.box.texture = texture
-indicator.box.useAlpha = true
-indicator.box.alphaTexture = alphaTexture
+indicator.updateBuffers()
+indicator.castShadows = false
+indicator.ignoreLighting()
+// indicator.useTexture = true
+// indicator.texture = texture
+indicator.transparent = true
+// indicator.useAlpha = true
+// indicator.alphaTexture = alphaTexture
 
 var thirdPerson = false
 var anims = ["idle", "walk", "jump", "run"]
@@ -337,9 +340,9 @@ function raycast3D(start, angle, distance) {
 	var travel = 0
 	while (travel < distance) {
 		travel += 0.01
-		raycast2.x = start.x + Math.sin(angle.y) * Math.cos(angle.x + Math.PI) * travel
-		raycast2.y = start.y + Math.sin(angle.x + Math.PI) * travel
-		raycast2.z = start.z + Math.cos(angle.y) * Math.cos(angle.x + Math.PI) * travel
+		raycast2.x = start.x + Math.sin(angle.y) * Math.cos(-angle.x) * travel
+		raycast2.y = start.y + Math.sin(-angle.x) * travel
+		raycast2.z = start.z + Math.cos(angle.y) * Math.cos(-angle.x) * travel
 		if (!none.includes(getBlock(Math.floor(raycast2.x+player.wcpos.x), Math.floor(raycast2.y+player.wcpos.y), Math.floor(raycast2.z+player.wcpos.z), false))) {
 			break
 		}

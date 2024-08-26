@@ -316,9 +316,9 @@ class Player extends Object3D {
 		}
 		if ((mouse.rclick || mobileR) && checkValidClick() && !inventoryOpen && inInventory <= 0) {
 			var bp = { ...rp }
-			bp.x -= Math.sin(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.025
-			bp.y += Math.sin(camera.rot.x + Math.PI) * 0.025
-			bp.z -= Math.cos(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.025
+			bp.x -= Math.sin(camera.rot.y) * Math.cos(-camera.rot.x) * 0.025
+			bp.y -= Math.sin(-camera.rot.x) * 0.025
+			bp.z -= Math.cos(camera.rot.y) * Math.cos(-camera.rot.x) * 0.025
 			bp = { x: Math.round(bp.x + 0.5) - 0.5, y: Math.round(bp.y + 0.5) - 0.5, z: Math.round(bp.z + 0.5) - 0.5 }
 			var bpHitbox = new Object3D(bp.x, bp.y, bp.z, 1, 1, 1)
 			if (!this.isColliding([bpHitbox]) && indicator.visible && itemData[inventory[selected][0]][1]) {
@@ -557,10 +557,10 @@ class Player extends Object3D {
 				}
 			}
 
-			if (camera.rot.x > Math.PI/8) {
+			if (camera.rot.x < Math.PI/8) {
 				this.dashDir.y = 1
 			}
-			if (camera.rot.x < -Math.PI/8) {
+			if (camera.rot.x > -Math.PI/8) {
 				this.dashDir.y = -1
 			}
 			if (keys["KeyQ"] || keys["KeyE"]) {
@@ -1157,27 +1157,35 @@ class Player extends Object3D {
 		if (this.wall.x == 0 && this.wall.z == 0) {
 			this.wall.v += delta
 		}
-		let set = {x: 0, z: 0}
+
 		for (let i = 0; i < steps; i++) {
 			var lastX = this.pos.x
 			this.pos.x += x / steps
-			
 			if (this.checkCollide()) {
 				this.pos.x = lastX
 				this.wall.x = Math.abs(x) / x
 				this.wall.v = 0
+				break
 			}
+		}
+
+		for (let i = 0; i < steps; i++) {
 			var lastZ = this.pos.z
 			this.pos.z += z / steps
 			if (this.checkCollide()) {
 				this.pos.z = lastZ
 				this.wall.z = Math.abs(z) / z
 				this.wall.v = 0
+				break
 			}
+		}
+
+		for (let i = 0; i < steps; i++) {
 			var lastY = this.pos.y
 			this.pos.y += y / steps
 			if (this.checkCollide()) {
 				this.pos.y = lastY
+				this.cbBlock = getBlock(Math.floor(this.pos.x), Math.floor(this.pos.y - 0.5) - 1, Math.floor(this.pos.z))
 				if (this.vel.y < 0) {
 					this.falling = 0
 				}

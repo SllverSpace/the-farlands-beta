@@ -53,9 +53,15 @@ function menuTick() {
     }
     ctx.globalAlpha = 1
     ui.img(canvas.width/2, canvas.height/2, w, canvas.height, bgImg)
-   if (scene != "game" && targetScene != "game") ctx.globalAlpha = 1-overlayA
+    if (scene != "game" && targetScene != "game") ctx.globalAlpha = 1-overlayA
 
     ui.text(canvas.width/2, 75*su, (75+Math.sin(time)*2)*su, "The Farlands", {align: "center"})
+
+    ctx.save()
+    ctx.translate(canvas.width/2+250*su, 120*su)
+    ctx.rotate(-Math.PI/16)
+    ui.text(0, 0, (40+Math.sin(time)*2)*su, "BETA", {align: "center", colour: [0, 127, 255, 1]})
+    ctx.restore()
     
     playButton.set(500/2*su, canvas.height/2 - 75*su, 500*su, 70*su)
     playButton.textSize = 35*su

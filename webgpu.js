@@ -180,6 +180,13 @@ class WebGPU {
             var vis = 0.0;
             let blur = 0.01;
 
+            // vis = textureSampleCompare(
+            //             shadowTexture,
+            //             shadowSampler,
+            //             fragPos.xy,
+            //             fragPos.z + uScene.bias,
+            // );
+
             for (var x = 0; x < 3; x++) {
                 for (var y = 0; y < 3; y++) {
                     let offset = vec2f(f32(x-1)*sx, f32(y-1)*sy);
@@ -346,7 +353,8 @@ class WebGPU {
             @location(0) color : vec4f,
             @location(1) normal : vec3f,
             @location(2) uv : vec2f,
-            @location(3) pos : vec3f
+            @location(3) pos : vec3f,
+            @location(4) pos2 : vec4f
         }
 
         @vertex
@@ -362,6 +370,7 @@ class WebGPU {
             output.normal.z = -output.normal.z;
             output.uv = uv;
             output.pos = vec3<f32>(translated[0], translated[1], -translated[2]);
+            output.pos2 = uObj.model * vec4(position.xyz, 1.0);
             return output;
         }
     `
@@ -384,7 +393,55 @@ class WebGPU {
         let spec = pow(max(dot(viewDir, reflectDir), 0.0), uObj.material.shininess);
         let specular = uObj.material.specular * spec * uScene.light.colour;
 
-        let colour = ambient + diffuse + specular;
+        let size = textureDimensions(shadowTexture);
+        let sx = 1.0 / f32(size.x);
+        let sy = 1.0 / f32(size.y);
+
+
+        let fragPosLightSpace = uScene.lightView * fragData.pos2;
+        let fragPos = vec3(
+            fragPosLightSpace.xy * vec2(0.5, -0.5) + vec2(0.5),
+            fragPosLightSpace.z
+        );
+
+        let inRange = (
+            fragPos.x >= 0 &&
+            fragPos.x <= 1 &&
+            fragPos.y >= 0 &&
+            fragPos.y <= 1
+        );
+
+        var vis = 0.0;
+        let blur = 0.01;
+
+        // vis = textureSampleCompare(
+        //             shadowTexture,
+        //             shadowSampler,
+        //             fragPos.xy,
+        //             fragPos.z + uScene.bias,
+        // );
+
+        for (var x = 0; x < 3; x++) {
+            for (var y = 0; y < 3; y++) {
+                let offset = vec2f(f32(x-1)*sx, f32(y-1)*sy);
+                // let depth = textureSample(shadowTexture, uSampler, fragPos.xy+offset);
+                vis += textureSampleCompare(
+                    shadowTexture,
+                    shadowSampler,
+                    fragPos.xy+offset,
+                    fragPos.z + uScene.bias,
+                );
+            }
+        }
+
+        var shadow = vis / 9.0;
+        var shadowFactor = 1.0;
+        if inRange {
+            shadowFactor = min((1.0 - shadow) + 0.1, 1.0);
+        }
+
+
+        let colour = ambient + (diffuse + specular) * shadowFactor;
 
         var lit = vec3f(0, 0, 0);
 
@@ -2111,6 +2168,14 @@ class WebGPU {
                     ambient: [0.5, 0.5, 0.5],
                     diffuse: [1, 1, 1],
                     specular: [0.9, 0.9, 0.9],
+                    shininess: 128
+                }
+            }
+            ignoreLighting() {
+                this.material = {
+                    ambient: [1, 1, 1],
+                    diffuse: [0, 0, 0],
+                    specular: [0, 0, 0],
                     shininess: 128
                 }
             }

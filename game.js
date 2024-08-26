@@ -168,35 +168,35 @@ function gameTick() {
 
 	var r = raycast3D({x: player.pos.x, y: player.pos.y+cameraY, z: player.pos.z}, camera.rot, 10)
 	rp = { ...r[1] }
-	let tries = 0
-	while (tries < 250 && r[0] < 10) {
-		r[1].x += Math.sin(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.01
-		r[1].y -= Math.sin(camera.rot.x + Math.PI) * 0.01
-		r[1].z += Math.cos(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.01
-		tries += 1
-		if (getBlock(Math.round(r[1].x - 0.5), Math.round(r[1].y - 0.5), Math.round(r[1].z - 0.5)) != 0) {
-			break
-		}
-	}
-	if (tries >= 100 && r[0] < 10) {
-		tries = 0
-		r[1].x -= Math.sin(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 1
-		r[1].y += Math.sin(camera.rot.x + Math.PI) * 1
-		r[1].z -= Math.cos(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 1
-		while (tries < 100 && r[0] < 10) {
-			r[1].x -= Math.sin(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.01
-			r[1].y += Math.sin(camera.rot.x + Math.PI) * 0.01
-			r[1].z -= Math.cos(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * 0.01
-			tries += 1
-			if (getBlock(Math.round(r[1].x - 0.5), Math.round(r[1].y - 0.5), Math.round(r[1].z - 0.5), true, true, false, false, true) != 0) {
-				break
-			}
-		}
-	}
+	// let tries = 0
+	// while (tries < 250 && r[0] < 10) {
+	// 	r[1].x += Math.sin(camera.rot.y) * Math.cos(-camera.rot.x) * 0.01
+	// 	r[1].y += Math.sin(-camera.rot.x) * 0.01
+	// 	r[1].z += Math.cos(camera.rot.y) * Math.cos(-camera.rot.x) * 0.01
+	// 	tries += 1
+	// 	if (getBlock(Math.round(r[1].x - 0.5), Math.round(r[1].y - 0.5), Math.round(r[1].z - 0.5)) != 0) {
+	// 		break
+	// 	}
+	// }
+	// if (tries >= 100 && r[0] < 10) {
+	// 	tries = 0
+	// 	r[1].x += Math.sin(camera.rot.y) * Math.cos(-camera.rot.x) * 1
+	// 	r[1].y += Math.sin(-camera.rot.x) * 1
+	// 	r[1].z += Math.cos(camera.rot.y) * Math.cos(-camera.rot.x) * 1
+	// 	while (tries < 100 && r[0] < 10) {
+	// 		r[1].x += Math.sin(camera.rot.y) * Math.cos(-camera.rot.x) * 0.01
+	// 		r[1].y += Math.sin(-camera.rot.x) * 0.01
+	// 		r[1].z += Math.cos(camera.rot.y) * Math.cos(-camera.rot.x) * 0.01
+	// 		tries += 1
+	// 		if (getBlock(Math.round(r[1].x - 0.5), Math.round(r[1].y - 0.5), Math.round(r[1].z - 0.5), true, true, false, false, true) != 0) {
+	// 			break
+	// 		}
+	// 	}
+	// }
 
 	indicator.pos = { x: Math.round(r[1].x + 0.5) - 0.5, y: Math.round(r[1].y + 0.5) - 0.5, z: Math.round(r[1].z + 0.5) - 0.5 }
 	indicator.visible = r[0] < 10 && getBlock(indicator.pos.x, indicator.pos.y, indicator.pos.z, true, true, false, false, true) != 0
-	indicator.update()
+	// indicator.update()
 
     username = usernameBox.text
 
@@ -376,9 +376,9 @@ function gameTick() {
 
 	if (rDistance > 0.5) {
 		var raycast = raycast3D(camera.pos, { x: camera.rot.x + Math.PI, y: camera.rot.y, z: -camera.rot.z }, rDistance)
-		camera.pos.x += Math.sin(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * (raycast[0])
-		camera.pos.y -= Math.sin(camera.rot.x + Math.PI) * (raycast[0])
-		camera.pos.z += Math.cos(camera.rot.y) * Math.cos(camera.rot.x + Math.PI) * (raycast[0])
+		camera.pos.x -= Math.sin(camera.rot.y) * Math.cos(-camera.rot.x) * (raycast[0])
+		camera.pos.y -= Math.sin(-camera.rot.x) * (raycast[0])
+		camera.pos.z -= Math.cos(camera.rot.y) * Math.cos(-camera.rot.x) * (raycast[0])
 	}
 
 	player.usernameText = username
@@ -412,10 +412,10 @@ var lastCp = {}
 function sortChunks() {
 	// webgl.setView(camera)
 
-	let viewProjection = mat4.create()
-	mat4.perspective(projection, fov * Math.PI / 180, canvas.width / canvas.height, 0.01, 5000)
+	// let viewProjection = mat4.create()
+	// mat4.perspective(projection, fov * Math.PI / 180, canvas.width / canvas.height, 0.01, 5000)
 
-	mat4.multiply(viewProjection, projection, view)
+	// mat4.multiply(viewProjection, projection, view)
 
 	let cp = {x: Math.floor(player.wcpos.x/cs.x), y: Math.floor(player.wcpos.y/cs.y), z: Math.floor(player.wcpos.z/cs.z)}
 
@@ -424,12 +424,13 @@ function sortChunks() {
 		lastCp = JSON.stringify(cp)
 	}
 
-	planes = extractFrustumPlanes(viewProjection)
+	planes = extractFrustumPlanes(webgpu.getViewMatrix(camera, fov))
 	for (let chunk2 in chunks) {
 		var chunk = chunks[chunk2]
 		if (chunk.empty || !chunk.meshed) continue
 		var p = { x: chunk.pos.x - player.wcpos.x + cs.x / 2, y: chunk.pos.y - player.wcpos.y + cs.y / 2, z: chunk.pos.z - player.wcpos.z + cs.z / 2 }
-		let visible = isCubeInFrustum([p.x, p.y, p.z], cs.x*3, planes)
+		// let visible = isCubeInFrustum([p.x, p.y, p.z], cs.x*10, planes)
+		let visible = true
 		// let d = Math.sqrt((camera.pos.x - p.x)**2 + (camera.pos.z - p.z)**2)
 		// let xzangle = Math.atan2(camera.pos.x - p.x, camera.pos.z - p.z)
 		// let dyangle = Math.atan2(player.wpos.y - chunk.pos.y, d)

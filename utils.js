@@ -194,7 +194,7 @@ function enoughSpace(item, count) {
 	return amount == count
 }
 
-function addItem(item, count, metadata=false, target=-1) {
+function addItem(item, count, metadata=true, target=-1) {
 	if (!metadata) {
 		console.log("That's too powerful! Ima reload your page in 3 seconds L")
 		console.log("3")

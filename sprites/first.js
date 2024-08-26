@@ -194,7 +194,7 @@ class Chunk extends Object3D {
 		let shadow = shadows
 		let e = exposure
 		let l = 1*e
-		let alpha = 0.5
+		let alpha = 0.8
 		// +Y
 		if (sides[0]) {
 			geometry.vertices.push(pos.x, pos.y+1-o, pos.z)
@@ -813,6 +813,9 @@ class Text3D extends Object3D {
 		this.mesh.useAlpha = true
 		this.mesh.alphaTexture = fontAlphaTexture
 		this.mesh.order = true
+		this.mesh.material.ambient = [1, 1, 1]
+		this.mesh.material.diffuse = [0, 0, 0]
+		this.mesh.material.specular = [0, 0, 0]
 		this.update()
 	}
 	lookAtCam() {
@@ -820,8 +823,9 @@ class Text3D extends Object3D {
 		let diff = {x: camera.pos.x-this.pos.x, y: camera.pos.y-this.pos.y, z: camera.pos.z-this.pos.z}
 		this.rot.y = Math.atan2(diff.x, diff.z)
 		var l1 = Math.sqrt((diff.x**2) + (diff.z**2))
-		this.rot.x = Math.atan2(l1, diff.y)
-		this.rot.x -= Math.PI/2
+		this.rot.x = -Math.atan2(l1, diff.y)
+		this.rot.x += Math.PI/2
+		this.rot.y += Math.PI
 	}
 	getWidth() {
 		let x = 0
@@ -866,6 +870,12 @@ class Text3D extends Object3D {
 				this.spc*spacing+x2 - width/2, this.spc*1.4, 0,
 				this.spc*spacing+x2 - width/2, 0,            0,
 				0+x2 - width/2,      			 this.spc*1.4, 0,
+			)
+			this.mesh.normals.push(
+				0, 0, 1,
+				0, 0, 1,
+				0, 0, 1,
+				0, 0, 1
 			)
 			this.mesh.faces.push(
 				i0, i1, i2,
